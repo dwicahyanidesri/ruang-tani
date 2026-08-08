@@ -13,6 +13,10 @@ function roleLabel(u: { is_admin: boolean; is_group_admin: boolean }) {
   return 'Anggota';
 }
 
+function rolePillClass(u: { is_admin: boolean; is_group_admin: boolean }) {
+  return u.is_admin || u.is_group_admin ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-600';
+}
+
 export default async function AdminUsersPage() {
   const user = await getCurrentUser();
   if (!user) return null;
@@ -34,7 +38,7 @@ export default async function AdminUsersPage() {
         </Link>
       </div>
 
-      <div className="mt-6 overflow-x-auto rounded-2xl bg-white shadow-soft">
+      <div className="mt-6 hidden overflow-x-auto rounded-2xl bg-white shadow-soft lg:block">
         <table className="w-full min-w-[680px] text-left text-sm">
           <thead className="bg-slate-50 text-xs font-semibold uppercase text-slate-500">
             <tr>
@@ -79,6 +83,30 @@ export default async function AdminUsersPage() {
             )}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-6 divide-y divide-slate-100 rounded-2xl bg-white shadow-soft lg:hidden">
+        {users.length === 0 ? (
+          <p className="px-5 py-6 text-center text-sm text-slate-500">Belum ada akun.</p>
+        ) : (
+          users.map((u) => (
+            <div key={String(u.id)} className="flex items-start justify-between gap-4 p-5">
+              <div>
+                <p className="font-bold text-ink-900">{u.name}</p>
+                <p className="mt-0.5 text-sm text-slate-500">{u.email}</p>
+                <p className="text-sm text-slate-500">{u.groups?.name ?? '-'}</p>
+                <span
+                  className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-semibold ${rolePillClass(u)}`}
+                >
+                  {roleLabel(u)}
+                </span>
+              </div>
+              <div className="shrink-0">
+                <UserRowActions id={Number(u.id)} name={u.name} stacked canDelete={!u.is_admin} />
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

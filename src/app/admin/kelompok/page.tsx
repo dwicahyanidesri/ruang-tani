@@ -25,7 +25,7 @@ export default async function AdminGroupsPage() {
         </Link>
       </div>
 
-      <div className="mt-6 overflow-x-auto rounded-2xl bg-white shadow-soft">
+      <div className="mt-6 hidden overflow-x-auto rounded-2xl bg-white shadow-soft lg:block">
         <table className="w-full min-w-[560px] text-left text-sm">
           <thead className="bg-slate-50 text-xs font-semibold uppercase text-slate-500">
             <tr>
@@ -58,6 +58,34 @@ export default async function AdminGroupsPage() {
             )}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-6 divide-y divide-slate-100 rounded-2xl bg-white shadow-soft lg:hidden">
+        {groups.length === 0 ? (
+          <p className="px-5 py-6 text-center text-sm text-slate-500">Belum ada kelompok tani.</p>
+        ) : (
+          groups.map((group) => (
+            <div key={String(group.id)} className="flex items-start justify-between gap-4 p-5">
+              <div>
+                <p className="font-bold text-ink-900">{group.name}</p>
+                <p className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
+                  <span>
+                    Produk: <span className="font-semibold text-ink-900">{group._count.products}</span>
+                  </span>
+                  <span>
+                    Aktivitas: <span className="font-semibold text-ink-900">{group._count.activities}</span>
+                  </span>
+                  <span>
+                    Akun: <span className="font-semibold text-ink-900">{group._count.users}</span>
+                  </span>
+                </p>
+              </div>
+              <div className="shrink-0">
+                <GroupRowActions slug={group.slug} name={group.name} stacked />
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

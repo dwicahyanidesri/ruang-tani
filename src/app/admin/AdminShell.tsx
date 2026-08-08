@@ -15,16 +15,9 @@ type NavItem = {
   badge?: number;
 };
 
-const roleLabel = {
-  admin: 'Admin Utama',
-  group_admin: 'Admin Kelompok',
-  member: 'Anggota',
-} as const;
-
 export default function AdminShell({
   user,
   role,
-  groupName,
   pendingCount,
   children,
 }: {
@@ -70,6 +63,21 @@ export default function AdminShell({
   const scopedNavTitle = role === 'admin' ? 'Khusus Admin Utama' : 'Khusus Admin Kelompok';
 
   const isActive = (href: string) => (href === '/admin' ? pathname === '/admin' : pathname.startsWith(href));
+
+  const titleNav: NavItem[] = [
+    ...baseNav,
+    ...adminOnlyNav,
+    ...groupAdminOnlyNav,
+    { href: '/admin/akun-saya', label: 'Akun Saya', icon: 'sparkles' },
+  ];
+
+  const pageTitle = (() => {
+    if (pathname === '/admin') return 'Ringkasan';
+    const match = titleNav
+      .filter((item) => item.href !== '/admin' && pathname.startsWith(item.href))
+      .sort((a, b) => b.href.length - a.href.length)[0];
+    return match?.label ?? 'Ringkasan';
+  })();
 
   const navLinkClass = (href: string) =>
     `flex items-center gap-3 rounded-xl px-4 py-2.5 transition ${
@@ -155,10 +163,7 @@ export default function AdminShell({
             </svg>
           </button>
 
-          <h1 className="text-lg font-bold text-ink-900">
-            {user.name} · {roleLabel[role]}
-            {groupName ? ` · ${groupName}` : ''}
-          </h1>
+          <h1 className="text-lg font-bold text-ink-900">{pageTitle}</h1>
 
           <div className="relative">
             <button

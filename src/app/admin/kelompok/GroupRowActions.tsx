@@ -4,9 +4,17 @@ import Link from 'next/link';
 import DeleteButton from '@/components/DeleteButton';
 import { deleteGroupAction } from './actions';
 
-export default function GroupRowActions({ slug, name }: { slug: string; name: string }) {
+export default function GroupRowActions({
+  slug,
+  name,
+  stacked = false,
+}: {
+  slug: string;
+  name: string;
+  stacked?: boolean;
+}) {
   return (
-    <div className="flex items-center justify-end gap-3">
+    <div className={stacked ? 'flex flex-col items-end gap-2' : 'flex items-center justify-end gap-3'}>
       <Link href={`/admin/kelompok/${slug}/edit`} className="text-xs font-semibold text-brand-600">
         Edit
       </Link>

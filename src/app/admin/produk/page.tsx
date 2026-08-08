@@ -31,7 +31,7 @@ export default async function AdminProductsPage() {
         )}
       </div>
 
-      <div className="mt-6 overflow-x-auto rounded-2xl bg-white shadow-soft">
+      <div className="mt-6 hidden overflow-x-auto rounded-2xl bg-white shadow-soft lg:block">
         <table className="w-full min-w-[640px] text-left text-sm">
           <thead className="bg-slate-50 text-xs font-semibold uppercase text-slate-500">
             <tr>
@@ -81,6 +81,27 @@ export default async function AdminProductsPage() {
             )}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-6 divide-y divide-slate-100 rounded-2xl bg-white shadow-soft lg:hidden">
+        {products.length === 0 ? (
+          <p className="px-5 py-6 text-center text-sm text-slate-500">Belum ada produk.</p>
+        ) : (
+          products.map((product) => (
+            <div key={String(product.id)} className="flex items-start justify-between gap-4 p-5">
+              <div>
+                <p className="font-bold text-ink-900">{product.name}</p>
+                <p className="mt-0.5 text-sm text-slate-500">{product.groups?.name ?? '-'}</p>
+                <p className="text-sm text-slate-500">{product.category ?? '-'}</p>
+              </div>
+              {canManage && (
+                <div className="shrink-0">
+                  <ProductRowActions slug={product.slug} name={product.name} stacked />
+                </div>
+              )}
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
